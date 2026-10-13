@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Radha-Clicker</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -50,7 +50,20 @@ body{font-family:Georgia,'Times New Roman',serif;color:#fff8e6;background:#2a6b4
  #big{width:min(40vw,200px,28vh)}
  #title{font-size:24px}
 }
+html{touch-action:manipulation;overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%}
+#big,#left{touch-action:none}
+#choose{position:fixed;inset:0;z-index:100;background:linear-gradient(#f6a04d,#2a6b4a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+#choose h1{margin:0;color:#fff3b0;text-shadow:0 2px 6px #0008;font-size:clamp(30px,8vw,48px)}
+#choose p{margin:0 0 6px;font-size:18px}
+#choose button{font:inherit;font-size:22px;width:min(300px,80vw);padding:16px;border-radius:14px;border:3px solid #ffd34f;background:#5a2d0f;color:#fff8e6;cursor:pointer;touch-action:manipulation}
+#choose button:hover,#choose button:active{background:#7a3d12}
+body.phone #app{grid-template-columns:1fr;grid-template-rows:58% 42%}
+body.phone #right{border-left:0;border-top:3px solid #ffd34f}
+body.phone #big{width:min(46vw,210px,30vh)}
+body.phone #title{font-size:24px}
+body.phone .item{padding:10px}
 </style></head><body>
+<div id="choose"><h1>Radha-Clicker</h1><p>Jai Shri Radhe! Which device are you playing on?</p><button id="pPhone">📱 Phone</button><button id="pDesk">💻 Desktop</button></div>
 <div id="bg"><svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6a04d"/><stop offset=".45" stop-color="#ffd98a"/><stop offset="1" stop-color="#fff0c4"/></linearGradient>
@@ -288,6 +301,16 @@ setInterval(()=>{
 (function(){let h='';for(let i=0;i<60;i++){const x=Math.random()*800,y=372+Math.random()*125,c=Math.random()<.5?'#ffd21f':'#2f6fff';h+=`<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(2+Math.random()*2.5).toFixed(1)}" fill="${c}"/>`}
  $('fl').innerHTML=h})();
 
+function pick(m){document.body.classList.add(m);$('choose').style.display='none';ctx();
+ if(m=='phone'){
+  document.addEventListener('gesturestart',e=>e.preventDefault());
+  document.addEventListener('gesturechange',e=>e.preventDefault());
+  document.addEventListener('dblclick',e=>e.preventDefault());
+  document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
+  let lt=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-lt<350&&!e.target.closest('#right'))e.preventDefault();lt=n},{passive:false});
+ }
+}
+$('pPhone').onclick=()=>pick('phone');$('pDesk').onclick=()=>pick('desktop');
 showName();buildUps();update();
 </script>
 </body></html>
